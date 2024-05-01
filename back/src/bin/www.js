@@ -89,5 +89,5 @@ function onListening() {
   debug(`Listening on ${bind}`);
 
   console.log(`The server started successfully on ${bind}`);
-  console.log(`Access it via http://localhost:${addr.port}`);
+  console.log(`Access it via http://localhost:${addr.port}/api`);
 }

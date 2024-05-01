@@ -10,10 +10,10 @@ const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use('/api/users', userRoutes);
+app.use('/api/auth', userRoutes);
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/', indexRouter);
+app.use('/api', indexRouter);
 dotenv.config();
 
 dbConnection();
