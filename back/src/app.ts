@@ -3,6 +3,7 @@ import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import dbConnection from './config/dbConnection';
+import cors from 'cors';
 
 import { basicAuthRouter } from './routes/usersRoutes';
 import { globalRouter } from './routes';
@@ -12,6 +13,7 @@ const app: Express = express();
 dotenv.config();
 dbConnection();
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));

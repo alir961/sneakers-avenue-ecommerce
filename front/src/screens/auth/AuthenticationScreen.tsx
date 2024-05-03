@@ -24,7 +24,7 @@ function AuthenticationContainer(): React.JSX.Element {
   async function tryLogin(data: ILoginFormData) {
     setError(null);
     try {
-      const response = await axios.post('/api/auth/login', data);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, data);
       const token = response?.data.token;
 
       if (token) {
@@ -42,8 +42,8 @@ function AuthenticationContainer(): React.JSX.Element {
   async function tryRegister(data: IRegisterFormData) {
     setError(null);
     try {
-      await axios.post('/api/auth/register', data);
-      const response = await axios.post('/api/auth/login', data);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, data);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, data);
       const token = response.data.token;
 
       Cookies.set('token', token);
