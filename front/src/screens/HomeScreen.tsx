@@ -40,15 +40,18 @@ function HomeScreen(): React.JSX.Element {
 
   return (
     <div style={containerStyle}>
-      <NavigationBar color={'#000'}/>
+      <NavigationBar color={'black'}/>
       <div style={subContainerStyle}>
         <img alt={'Application logo'}
              src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtDkQxZtfjjBT1kVJlrj0_2eZGZwEMLe_g30IIgzTrZCyF73Dm'}/>
 
-        <h1 style={titleStyle}>Simplify Your Digital Life with AREA</h1>
-        <p style={paragraphStyle}>Our goal is to develop an automation platform to simplify the management of
-          digital life. Our software suite allows users to connect and automate various online services such as social
-          media, messaging platforms, file storage, and much more.</p>
+        <h1 style={titleStyle}>Simplify Your Shopping Experience with SneakersAvenue</h1>
+        <p style={paragraphStyle}>
+          Welcome to our premier sneakers shop, where you'll discover the latest trends and classic styles
+          from top brands like Nike, Adidas, and Puma. Our curated collection features exclusive releases,
+          limited editions, and iconic designs to elevate your sneaker game. With our expert team and
+          seamless shopping experience, you're sure to find the perfect pair that matches your style and
+          performance needs.</p>
         <div style={buttonContainerStyle} className={'buttonContainerStyle'}>
           <button className={'buttonStyle'} onClick={() => navigate(!isLoggedIn ? '/authentication' : '/profile')}>
             Get Started
@@ -56,8 +59,13 @@ function HomeScreen(): React.JSX.Element {
         </div>
       </div>
       <div>
-        <h1 style={titleStyle}>Get every thing working better together</h1>
-        <p style={paragraphStyle}>Discover all of the Services that AREA supports.</p>
+        <h1 style={titleStyle}>Every thing work better with Style</h1>
+        <p style={paragraphStyle}>Discover all of the products we sell</p>
+        <div style={buttonContainerStyle} className={'buttonContainerStyle'}>
+          <button className={'buttonStyle'} onClick={() => navigate('/product')}>
+            Our Products
+          </button>
+        </div>
       </div>
     </div>
   );

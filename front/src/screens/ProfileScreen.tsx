@@ -72,7 +72,7 @@ function ProfileScreen(): React.JSX.Element {
   const [profile, setProfile] = useState(null as IProfile);
 
   async function updateUserData() {
-    const response = await axios.get('/api/me', {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/me`, {
       headers: getAuthorizedHeader(),
     });
 

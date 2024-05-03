@@ -32,7 +32,7 @@ function LoginScreen(): React.JSX.Element {
 
   return (
     <div>
-      <NavigationBar color={'purple'}/>
+      <NavigationBar color={'black'}/>
 
       <div style={wrapperStyle}>
         <h6 style={titleStyle}>Welcome Back {name}</h6>

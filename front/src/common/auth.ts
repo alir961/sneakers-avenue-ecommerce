@@ -7,7 +7,7 @@ function getAuthorizedHeader() {
 }
 
 function logout(navigate: NavigateFunction) {
-  axios.post('/api/auth/logout', {}, {headers: getAuthorizedHeader()})
+  axios.post(`${process.env.REACT_APP_API_URL}/api/auth/logout`, {}, {headers: getAuthorizedHeader()})
     .catch(reason => console.warn('Unable to logout: ', reason))
     .finally(() => {
       Cookies.remove('token');

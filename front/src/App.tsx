@@ -23,6 +23,14 @@ const router = createBrowserRouter([
         path: '/login',
         element: <LoginScreen/>,
     },
+    {
+        path: '/product',
+        element: <HomeScreen/>,
+    },
+    {
+        path: '/cart',
+        element: <HomeScreen/>,
+    },
 ]);
 
 function App(): React.JSX.Element {

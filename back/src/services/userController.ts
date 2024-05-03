@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import {User} from '../schema/users/users.model';
+import {IUser, User} from '../schema/users/users.model';
 
 const getUsers = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -11,23 +11,16 @@ const getUsers = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-const updateUser = async (req: Request, res: Response): Promise<void> => {
+const updateUser = async (userId: string, profile: IUser) => {
     try {
-        const updatedUser = await User.findByIdAndUpdate(
-            req.params.id,
-            req.body, 
-            {new: true},
-        );
+        const user = await User.findById(userId).exec();
 
-        if (!updatedUser) {
-            res.status(404).send({ error: 'User not found' });
-            return;
-        }
-
-        res.status(200).send(updatedUser);
+        user.email = profile.email;
+        user.firstName = profile.firstName;
+        user.lastName = profile.lastName;
+        await user.save();
     } catch (error) {
-        console.error('Error updating user:', error);
-        res.status(500).send({ error: 'Error updating user' });
+        console.error('Unable to update user', error);
     }
 };
 

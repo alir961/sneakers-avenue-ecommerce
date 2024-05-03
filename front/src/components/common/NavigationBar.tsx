@@ -4,6 +4,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faUser, faBars, faXmark} from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
 import './NavigationBar.css';
+import {faBasketShopping} from "@fortawesome/free-solid-svg-icons/faBasketShopping";
+import {faBagShopping} from "@fortawesome/free-solid-svg-icons/faBagShopping";
+import {faHome} from "@fortawesome/free-solid-svg-icons/faHome";
 
 export function checkIfUserIsLoggedIn(): boolean {
   const token = Cookies.get('token');
@@ -25,12 +28,12 @@ function NavigationBar(props: INavigationBarProperties): React.JSX.Element {
         <button onClick={() => setMenuDropDown(!menuDropDown)}>
           <FontAwesomeIcon icon={menuDropDown ? faXmark : faBars}/>
         </button>
-        <h1>AREA</h1>
+        <h1>SneakersAvenue</h1>
       </div>
       <div className={'links'} style={{top: (menuDropDown ? '0' : '-1000px')}}>
-        <Link to="/" className={'nav-link'}>Home</Link>
-        {isLoggedIn && <Link to="/services" className={'nav-link'}>Services</Link>}
-        {isLoggedIn && <Link to="/configuration" className={'nav-link'}>Configuration</Link>}
+        <Link to="/" className={'nav-link'}>Home  <FontAwesomeIcon icon={faHome}/></Link>
+        {isLoggedIn && <Link to="/product" className={'nav-link'}>Products <FontAwesomeIcon icon={faBagShopping}/></Link>}
+        {isLoggedIn && <Link to="/cart" className={'nav-link'}>Cart <FontAwesomeIcon icon={faBasketShopping}/></Link>}
         <Link to={isLoggedIn ? '/profile' : '/authentication'} className={'nav-icon'}>
           <FontAwesomeIcon icon={faUser}/>
         </Link>

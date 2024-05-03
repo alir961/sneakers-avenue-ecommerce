@@ -83,7 +83,7 @@ function AuthenticationContainer(): React.JSX.Element {
 function AuthenticationScreen(): React.JSX.Element {
   return (
     <div>
-      <NavigationBar color={'#000'}/>
+      <NavigationBar color={'black'}/>
       <AuthenticationContainer/>
     </div>
   );
