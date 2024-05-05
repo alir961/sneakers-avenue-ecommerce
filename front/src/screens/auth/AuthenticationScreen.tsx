@@ -34,7 +34,7 @@ function AuthenticationContainer(): React.JSX.Element {
         setError('Invalid credentials');
       }
     } catch (error) {
-      console.error('Error logging in:', error);
+      console.error('Error logging in:', error.response.data.message);
       setError('Unable to retrieve server data');
     }
   }
