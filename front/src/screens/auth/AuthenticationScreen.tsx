@@ -49,7 +49,7 @@ function AuthenticationContainer(): React.JSX.Element {
       Cookies.set('token', token);
       navigateToCallback();
     } catch (error) {
-      console.error('Error register in:', error);
+      console.error('Error register in:', error.response.data.message);
     }
   }
 
