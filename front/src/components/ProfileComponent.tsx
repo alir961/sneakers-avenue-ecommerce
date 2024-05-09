@@ -8,6 +8,7 @@ interface ProfileComponentProperties {
 }
 
 function ProfileComponent(props: ProfileComponentProperties) {
+  const [error, setError] = useState(null as string);
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState(props.user);
 
@@ -26,9 +27,9 @@ function ProfileComponent(props: ProfileComponentProperties) {
 
   function saveProfile() {
     setIsEditing(false);
-
+    setError(null);
     handleFormSubmit(user)
-      .catch(reason => console.log(reason));
+      .catch(reason => {console.log(reason); setError(reason.message);});
   }
 
   return (
@@ -42,6 +43,7 @@ function ProfileComponent(props: ProfileComponentProperties) {
 
       {!isEditing && <button className="buttonStyle" onClick={() => setIsEditing(true)}>Edit</button>}
       {isEditing && <button className="buttonStyle" onClick={() => saveProfile()}>Save</button>}
+      {error && <p style={{textAlign: 'center', color: '#f33', fontWeight: 'bold', fontSize: '20px'}}>{error}</p>}
     </div>
   );
 }

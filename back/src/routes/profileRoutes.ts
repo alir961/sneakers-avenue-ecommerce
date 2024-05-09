@@ -4,6 +4,7 @@ import {User} from '../schema/users/users.model';
 import {updateUser} from '../services/userController';
 
 const router = Router();
+const EMAIL_REGEX: RegExp = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
 router.get('/api/me', authenticateMiddleware, (req: AuthenticatedRequest, res: Response) => {
     return res.send(req.user);
@@ -27,11 +28,12 @@ router.put('/api/profile', authenticateMiddleware, async (req: AuthenticatedRequ
         const userId = req.user._id;
         const data = req.body;
 
-        if (data.email) {
-            await updateUser(userId, data);
-            res.sendStatus(200);
-        } else
-            res.status(400).json({message: 'Missing Email in body'});
+        if (!data.email) { return res.status(400).json({ message: 'Missing email in request body' }); }
+
+        if (!EMAIL_REGEX.test(data.email)) { return res.status(400).json({ message: 'Invalid email format' }); }
+
+        await updateUser(userId, data);
+        return res.sendStatus(200);
     } catch (error) {
         console.error('Error updating user', error);
         res.sendStatus(500);

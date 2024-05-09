@@ -38,7 +38,7 @@ function RegisterComponent(props: IRegisterComponentProperties): React.JSX.Eleme
     event.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert('Les mots de passe ne correspondent pas');
+      alert('Password do not match!');
       return;
     }
 

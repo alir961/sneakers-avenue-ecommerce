@@ -36,7 +36,7 @@ router.post('/api/auth/login', [], async (req: Request, res: Response) => {
                 .json({token: jwt});
         } catch (e) {
             res.status(403)
-                .json({message: 'Invalid credentials'});
+                .json({message: 'Invalid credentials, the account must surely not exist'});
         }
     } else {
         res.status(400)
