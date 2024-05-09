@@ -26,6 +26,7 @@ function HomeScreen(): React.JSX.Element {
     marginBottom: '1rem',
     color: '#333',
     textAlign: 'center',
+    position: 'relative',
   };
 
   const paragraphStyle: CSSProperties = {
@@ -43,7 +44,8 @@ function HomeScreen(): React.JSX.Element {
       <NavigationBar color={'black'}/>
       <div style={subContainerStyle}>
         <img alt={'Application logo'}
-             src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtDkQxZtfjjBT1kVJlrj0_2eZGZwEMLe_g30IIgzTrZCyF73Dm'}/>
+             src={'https://laced.imgix.net/products/6b908a9f-fb3f-48de-a26e-dbc6b54dfea7.jpg?auto=format&fit=crop&w=1200'}
+             style={{width: '70%', height: 'auto', objectFit: 'cover', marginTop: '-10%', marginBottom: '-5%', position: 'relative',}}/>
 
         <h1 style={titleStyle}>Simplify Your Shopping Experience with SneakersAvenue</h1>
         <p style={paragraphStyle}>
