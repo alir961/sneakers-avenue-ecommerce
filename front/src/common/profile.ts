@@ -24,4 +24,11 @@ async function deleteAccount(navigate: NavigateFunction) {
   navigate('/authentication');
 }
 
-export {handleFormSubmit, deleteAccount};
+async function getUserId() {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/me`, {
+        headers: getAuthorizedHeader(),
+    });
+    return response.data._id;
+}
+
+export {handleFormSubmit, deleteAccount, getUserId};

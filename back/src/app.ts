@@ -9,6 +9,7 @@ import { basicAuthRouter } from './routes/usersRoutes';
 import { globalRouter } from './routes';
 import {profileRouter} from './routes/profileRoutes';
 import {productsRouter} from './routes/productsRoutes';
+import {cartRouter} from './routes/cartRoutes';
 
 const app: Express = express();
 
@@ -25,5 +26,6 @@ app.use(globalRouter);
 app.use(basicAuthRouter);
 app.use(profileRouter);
 app.use(productsRouter);
+app.use(cartRouter);
 
 export default app;

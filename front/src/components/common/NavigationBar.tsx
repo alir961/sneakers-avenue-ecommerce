@@ -31,12 +31,12 @@ function NavigationBar(props: INavigationBarProperties): React.JSX.Element {
         <h1>SneakersAvenue</h1>
       </div>
       <div className={'links'} style={{top: (menuDropDown ? '0' : '-1000px')}}>
-        <Link to="/" className={'nav-link'}>Home  <FontAwesomeIcon icon={faHome}/></Link>
-        {isLoggedIn && <Link to="/product" className={'nav-link'}>Products <FontAwesomeIcon icon={faBagShopping}/></Link>}
-        {isLoggedIn && <Link to="/cart" className={'nav-link'}>Cart <FontAwesomeIcon icon={faBasketShopping}/></Link>}
-        <Link to={isLoggedIn ? '/profile' : '/authentication'} className={'nav-icon'}>
-          <FontAwesomeIcon icon={faUser}/>
-        </Link>
+          <Link to="/" className={'nav-link'}>Home  <FontAwesomeIcon icon={faHome}/></Link>
+          <Link to="/product" className={'nav-link'}>Products <FontAwesomeIcon icon={faBagShopping}/></Link>
+          {isLoggedIn && <Link to="/cart" className={'nav-link'}>Cart <FontAwesomeIcon icon={faBasketShopping}/></Link>}
+          <Link to={isLoggedIn ? '/profile' : '/authentication'} className={'nav-icon'}>
+                <FontAwesomeIcon icon={faUser}/>
+          </Link>
       </div>
 
       <div className={'menu'}>

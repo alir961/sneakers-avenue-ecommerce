@@ -1,8 +1,8 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../components/cartContext';
-import NavigationBar from '../components/common/NavigationBar';
+import { addToCart } from '../components/productsToCart';
+import NavigationBar, {checkIfUserIsLoggedIn} from '../components/common/NavigationBar';
 import Modal, {Styles} from 'react-modal';
 import '../index.css';
 
@@ -16,8 +16,7 @@ interface IProduct {
 
 const ProductScreen: React.FC = () => {
     const navigate = useNavigate();
-    const { addToCart } = useCart();
-
+    const isLoggedIn = checkIfUserIsLoggedIn();
     const [products, setProducts] = useState<IProduct[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null as string);
@@ -112,18 +111,18 @@ const ProductScreen: React.FC = () => {
                         <p>Price: ${product.price.toFixed(2)}</p>
                         {product.image && <img src={product.image} alt={product.name} style={{ width: '100px' }} />}
                         <div style={buttonContainerStyle} className={'buttonContainerStyle'}>
-                            <button className={'buttonStyle'} onClick={() => addToCart(product)}>
+                            {isLoggedIn && <button className={'buttonStyle'} onClick={() => addToCart(product)}>
                                 Add to Cart
-                            </button>
+                            </button>}
                         </div>
                     </div>
                 ))
             )}
 
             <div style={buttonContainerStyle} className={'buttonContainerStyle'}>
-                <button className={'buttonStyle'} onClick={() => navigate('/cart')}>
+                {isLoggedIn && <button className={'buttonStyle'} onClick={() => navigate('/cart')}>
                     Go to Cart
-                </button>
+                </button>}
             </div>
 
             <Modal
@@ -187,4 +186,5 @@ const ProductScreen: React.FC = () => {
 );
 };
 
+export {IProduct};
 export default ProductScreen;
