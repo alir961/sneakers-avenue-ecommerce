@@ -91,4 +91,4 @@ async function login(credentials: Credentials): Promise<string> {
         });
 }
 
-export {login, generateAccessToken, retrieveUser, saveUser, register};
+export {login, retrieveUser, saveUser, register};

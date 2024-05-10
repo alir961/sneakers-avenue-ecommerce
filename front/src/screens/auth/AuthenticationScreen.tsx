@@ -50,7 +50,7 @@ function AuthenticationContainer(): React.JSX.Element {
       navigateToCallback();
     } catch (error) {
       console.error('Error register in:', error.response.data.message);
-      setError(`Unable to retrieve server data : ${error.response.data.message}`);
+      setError(`Error register in : ${error.response.data.message}`);
     }
   }
 
