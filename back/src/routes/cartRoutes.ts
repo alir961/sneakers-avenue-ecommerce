@@ -8,9 +8,9 @@ const isValidObjectId = (id: string) => mongoose.Types.ObjectId.isValid(id);
 
 router.post('/api/cart', async (req, res) => {
     try {
-        const { userId, productId, quantity } = req.body;
+        const { userId, productId, name, price, quantity, image } = req.body;
 
-        if (!userId || !productId || typeof quantity !== 'number' || quantity < 1) {
+        if (!userId || !productId || !name || !image || typeof price !== 'number' || typeof quantity !== 'number' || quantity < 1) {
             return res.status(400).json({ message: 'Invalid data' });
         }
 
@@ -25,7 +25,7 @@ router.post('/api/cart', async (req, res) => {
         if (existingItem) {
             existingItem.quantity += quantity;
         } else {
-            cart.items.push({ productId, quantity });
+            cart.items.push({ productId, name, price, quantity, image });
         }
 
         await cart.save();

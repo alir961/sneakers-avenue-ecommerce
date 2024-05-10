@@ -74,7 +74,6 @@ const ProductScreen: React.FC = () => {
     const productCardStyle: CSSProperties = {
         border: '1px solid #ccc',
         padding: '15px',
-        textAlign: 'left',
     };
 
     const modalStyle: Styles = {
@@ -89,11 +88,30 @@ const ProductScreen: React.FC = () => {
         },
     };
 
+    const titleStyle: CSSProperties = {
+        fontSize: '2.5rem',
+        fontWeight: 'bold',
+        marginBottom: '1rem',
+        color: '#333',
+        textAlign: 'center',
+        position: 'relative',
+    };
+
+    const paragraphStyle: CSSProperties = {
+        fontSize: '1.2rem',
+        lineHeight: '1.6',
+        color: '#555',
+        textAlign: 'center',
+        margin: '0 auto',
+        maxWidth: '800px',
+        padding: '0 15px',
+    };
+
     return (
         <div style={containerStyle}>
             <NavigationBar color="black" />
 
-            <h1>Available Products</h1>
+            <h1 style={titleStyle}>Available Products</h1>
 
             <div style={buttonContainerStyle} className={'buttonContainerStyle'}>
                 <button className={'buttonStyle'} onClick={() => setIsModalOpen(true)}>
@@ -106,10 +124,10 @@ const ProductScreen: React.FC = () => {
             ) : (
                 products.map((product) => (
                     <div key={product._id} style={productCardStyle}>
-                        <h2>{product.name}</h2>
-                        <p>{product.description}</p>
-                        <p>Price: ${product.price.toFixed(2)}</p>
+                        <h2 style={titleStyle}>{product.name}</h2>
                         {product.image && <img src={product.image} alt={product.name} style={{ width: '100px' }} />}
+                        <p style={paragraphStyle}>{product.description}</p>
+                        <p style={paragraphStyle}>Price: ${product.price.toFixed(2)}</p>
                         <div style={buttonContainerStyle} className={'buttonContainerStyle'}>
                             {isLoggedIn && <button className={'buttonStyle'} onClick={() => addToCart(product)}>
                                 Add to Cart
@@ -132,7 +150,7 @@ const ProductScreen: React.FC = () => {
                 appElement={document.getElementById('root')}
                 style={modalStyle}
             >
-                <h2>Add New Product</h2>
+                <h2 style={titleStyle}>Add New Product</h2>
                 <input
                     type="text"
                     name="name"
