@@ -10,6 +10,10 @@ router.get('/api/me', authenticateMiddleware, (req: AuthenticatedRequest, res: R
     return res.send(req.user);
 });
 
+router.get('/api/me/status', authenticateMiddleware, (req: AuthenticatedRequest, res: Response) => {
+    return res.send(req.user.isAdmin);
+});
+
 router.delete('/api/me', authenticateMiddleware, async (req: AuthenticatedRequest, res: Response) => {
     try {
         const user = await User.findById(req.user._id).exec();
