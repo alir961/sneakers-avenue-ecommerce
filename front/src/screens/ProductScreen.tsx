@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { addToCart } from '../components/productsToCart';
 import NavigationBar, {checkIfUserIsLoggedIn} from '../components/common/NavigationBar';
+import {getAuthorizedHeader} from "../common/auth";
 import Modal, {Styles} from 'react-modal';
 import '../index.css';
 
@@ -21,6 +22,7 @@ const ProductScreen: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null as string);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [newProduct, setNewProduct] = useState({
         name: '',
         description: '',
@@ -39,8 +41,27 @@ const ProductScreen: React.FC = () => {
                 setLoading(false);
             }
         };
-
         fetchProducts().catch(reason => console.log(reason));
+    }, []);
+
+    async function checkIfUserIsAdmin() {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/me/status`, {
+            headers: getAuthorizedHeader(),
+        });
+
+        return(response?.data);
+    }
+
+    useEffect(() => {
+        const fetchAdminStatus = async () => {
+            try {
+                const isAdmin = await checkIfUserIsAdmin();
+                setIsAdmin(isAdmin);
+            } catch (error) {
+                console.error('Error checking admin status:', error);
+            }
+        };
+        fetchAdminStatus();
     }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -113,11 +134,11 @@ const ProductScreen: React.FC = () => {
 
             <h1 style={titleStyle}>Available Products</h1>
 
-            <div style={buttonContainerStyle} className={'buttonContainerStyle'}>
+            {isAdmin && <div style={buttonContainerStyle} className={'buttonContainerStyle'}>
                 <button className={'buttonStyle'} onClick={() => setIsModalOpen(true)}>
                     Add New Product
                 </button>
-            </div>
+            </div>}
 
             {loading ? (
                 <p>Loading products...</p>

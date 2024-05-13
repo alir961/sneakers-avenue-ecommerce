@@ -6,6 +6,7 @@ interface IUser {
   password: string;
   firstName: string;
   lastName: string;
+  isAdmin?: boolean;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -23,6 +24,11 @@ const UserSchema = new Schema<IUser>({
     },
     lastName: {
         type: String,
+        required: false,
+    },
+    isAdmin: { 
+        type: Boolean,
+        default: false,
         required: false,
     },
 });
