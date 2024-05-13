@@ -57,22 +57,46 @@ function CartScreen(): React.JSX.Element {
         fetchCartItems();
     }, [userId]);
 
-    const handleIncreaseQuantity = (productId: string) => {
-        setCartItems((prevItems) =>
-            prevItems.map((item) => item.productId === productId ? {...item, quantity: item.quantity + 1} : item)
-        );
+    const handleIncreaseQuantity = async (productId: string) => {
+        try {
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/cart/${userId}/increase`, { productId }, {
+                headers: getAuthorizedHeader(),
+            });
+            setCartItems((prevItems) =>
+                prevItems.map((item) => item.productId === productId ? {...item, quantity: item.quantity + 1} : item)
+            );
+        } catch (error) {
+            console.error('Error increasing quantity:', error);
+            setError('Error increasing quantity : ' + error.response.data.message);
+        }
     };
 
-    const handleDecreaseQuantity = (productId: string) => {
-        setCartItems((prevItems) =>
-            prevItems
-                .map((item) => (item.productId === productId ? {...item, quantity: item.quantity - 1} : item))
-                .filter((item) => item.quantity > 0)
-        );
+    const handleDecreaseQuantity = async (productId: string) => {
+        try {
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/cart/${userId}/decrease`, { productId }, {
+                headers: getAuthorizedHeader(),
+            });
+            setCartItems((prevItems) =>
+                prevItems
+                    .map((item) => (item.productId === productId ? {...item, quantity: item.quantity - 1} : item))
+                    .filter((item) => item.quantity > 0)
+            );
+        } catch (error) {
+            console.error('Error decreasing quantity:', error);
+            setError('Error decreasing quantity : ' + error.response.data.message);
+        }
     };
 
-    const handleRemoveItem = (productId: string) => {
-        setCartItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
+    const handleRemoveItem = async (productId: string) => {
+        try {
+            await axios.delete(`${process.env.REACT_APP_API_URL}/api/cart/${userId}/${productId}`, {
+                headers: getAuthorizedHeader(),
+            });
+            setCartItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
+        } catch (error) {
+            console.error('Error removing item:', error);
+            setError('Error removing item : ' + error.response.data.message);
+        }
     };
 
     const calculateTotalPrice = () => {

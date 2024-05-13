@@ -1,7 +1,7 @@
 import express from 'express';
 import {Cart} from '../schema/cart/cart.model';
 import {authenticateMiddleware} from '../services/authentication';
-import mongoose from 'mongoose';
+import mongoose, {Types} from 'mongoose';
 
 const router = express.Router();
 const isValidObjectId = (id: string) => mongoose.Types.ObjectId.isValid(id);
@@ -57,6 +57,102 @@ router.get('/api/cart/:userId', authenticateMiddleware, async (req, res) => {
         res.status(200).json(cart);
     } catch (error) {
         console.error('Error retrieving cart:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+router.put('/api/cart/:userId/increase', authenticateMiddleware, async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { productId } = req.body;
+
+        if (!userId || !productId) {
+            return res.status(400).json({ message: 'User ID and Product ID are required' });
+        }
+        
+        const cart = await Cart.findOne({ userId });
+
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
+        const item = cart.items.find(item => item.productId.equals(productId));
+        if (item) {
+            item.quantity += 1;
+        } else {
+            return res.status(404).json({ message: 'Product not found in cart' });
+        }
+
+        await cart.save();
+
+        res.status(200).json(cart);
+
+    } catch (error) {
+        console.error('Error increasing quantity:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+router.put('/api/cart/:userId/decrease', authenticateMiddleware, async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { productId } = req.body;
+
+        if (!userId || !productId) {
+            return res.status(400).json({ message: 'User ID and Product ID are required' });
+        }
+
+        const cart = await Cart.findOne({ userId });
+
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+        
+        const item = cart.items.find(item => item.productId.equals(productId));
+        if (item) {
+            if (item.quantity > 1)
+                item.quantity -= 1;
+        } else {
+            return res.status(404).json({ message: 'Product not found in cart' });
+        }
+
+        await cart.save();
+
+        res.status(200).json(cart);
+
+    } catch (error) {
+        console.error('Error decreasing quantity:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+router.delete('/api/cart/:userId/:productId', authenticateMiddleware, async (req, res) => {
+    try {
+        const { userId, productId } = req.params;
+
+        if (!userId || !productId) {
+            return res.status(400).json({ message: 'User ID and Product ID are required' });
+        }
+
+        const cart = await Cart.findOne({ userId });
+
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
+        const itemIndex = cart.items.findIndex(item => item.productId.equals(new Types.ObjectId(productId)));
+        if (itemIndex !== -1) {
+            cart.items.splice(itemIndex, 1);
+        } else {
+            return res.status(404).json({ message: 'Product not found in cart' });
+        }
+
+        await cart.save();
+
+        res.status(200).json(cart);
+
+    } catch (error) {
+        console.error('Error removing item:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
