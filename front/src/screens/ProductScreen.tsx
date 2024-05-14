@@ -95,8 +95,8 @@ const ProductScreen: React.FC = () => {
     };
 
     const productCardStyle: CSSProperties = {
-        border: '1px solid #ccc',
-        padding: '15px',
+        padding: '2%',
+        margin: '2%',
     };
 
     const modalStyle: Styles = {
@@ -145,19 +145,23 @@ const ProductScreen: React.FC = () => {
             {loading ? (
                 <p>Loading products...</p>
             ) : (
-                products.map((product) => (
-                    <div key={product._id} style={productCardStyle}>
-                        <h2 style={titleStyle}>{product.name}</h2>
-                        {product.image && <img src={product.image} alt={product.name} style={{ width: '100px' }} />}
-                        <p style={paragraphStyle}>{product.description}</p>
-                        <p style={paragraphStyle}>Price: ${product.price.toFixed(2)}</p>
-                        <div style={buttonContainerStyle} className={'buttonContainerStyle'}>
-                            {isLoggedIn && <button className={'buttonStyle'} onClick={() => addToCart(product)}>
-                                Add to Cart
-                            </button>}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ width: '80%', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '5%' }}>
+                    {products.map((product) => (
+                        <div key={product._id} className={'productCardStyle'} style={productCardStyle}>
+                            <h2 style={titleStyle}>{product.name}</h2>
+                            {product.image && <img src={product.image} alt={product.name} style={{ width: '100px' }} />}
+                            <p style={paragraphStyle}>{product.description}</p>
+                            <p style={paragraphStyle}>Price: ${product.price.toFixed(2)}</p>
+                            <div style={buttonContainerStyle} className={'buttonContainerStyle'}>
+                                {isLoggedIn && <button className={'buttonStyle2'} onClick={() => addToCart(product)}>
+                                    Add to Cart
+                                </button>}
+                            </div>
                         </div>
+                    ))}
                     </div>
-                ))
+                </div>
             )}
 
             <div style={buttonContainerStyle} className={'buttonContainerStyle'}>

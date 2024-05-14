@@ -56,7 +56,7 @@ function HomeScreen(): React.JSX.Element {
           performance needs.</p>
         <div style={buttonContainerStyle} className={'buttonContainerStyle'}>
           <button className={'buttonStyle'} onClick={() => navigate(!isLoggedIn ? '/authentication' : '/profile')}>
-            Get Started
+            Join Us
           </button>
         </div>
       </div>
