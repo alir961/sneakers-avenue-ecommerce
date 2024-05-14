@@ -54,11 +54,13 @@ const ProductScreen: React.FC = () => {
 
     useEffect(() => {
         const fetchAdminStatus = async () => {
-            try {
-                const isAdmin = await checkIfUserIsAdmin();
-                setIsAdmin(isAdmin);
-            } catch (error) {
-                console.error('Error checking admin status:', error);
+            if (isLoggedIn) {
+                try {
+                    const isAdmin = await checkIfUserIsAdmin();
+                    setIsAdmin(isAdmin);
+                } catch (error) {
+                    console.error('Error checking admin status:', error);
+                }
             }
         };
         fetchAdminStatus();
