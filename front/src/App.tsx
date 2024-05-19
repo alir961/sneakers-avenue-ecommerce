@@ -33,6 +33,9 @@ const router = createBrowserRouter([
         path: '/cart',
         element: <CartScreen/>,
     },
+    {
+        path: '/checkout',
+    },
 ]);
 
 function App(): React.JSX.Element {
