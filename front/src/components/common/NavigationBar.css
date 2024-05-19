@@ -13,6 +13,25 @@
     position: relative;
 }
 
+.text-link {
+    text-decoration: none;
+    margin: 0 5%;
+    font-size: 18px;
+    transition: all 0.2s ease-in-out;
+}
+
+.text-link-content {
+    color: transparent;
+    background: linear-gradient(to right, #5603BD, #009EFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+.text-link:hover {
+    font-size: 19px;
+}
+
 .nav-link {
     color: #fff;
     text-decoration: none;

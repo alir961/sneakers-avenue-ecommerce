@@ -28,11 +28,6 @@ function NavigationBar(props: INavigationBarProperties): React.JSX.Element {
         <button onClick={() => setMenuDropDown(!menuDropDown)}>
           <FontAwesomeIcon icon={menuDropDown ? faXmark : faBars}/>
         </button>
-        <h1 style={{color: 'transparent',
-            background: 'linear-gradient(to right, #5603BD, #009EFF)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            textShadow: '2px 2px 20px rgba(0, 0, 0, 0.5)'}}>SneakersAvenue</h1>
       </div>
       <div className={'links'} style={{top: (menuDropDown ? '0' : '-1000px')}}>
           <Link to="/" className={'nav-link'}>Home  <FontAwesomeIcon icon={faHome}/></Link>
@@ -42,10 +37,9 @@ function NavigationBar(props: INavigationBarProperties): React.JSX.Element {
                 <FontAwesomeIcon icon={faUser}/>
           </Link>
       </div>
-
-      <div className={'menu'}>
-
-      </div>
+        <Link to={'/'} className={'text-link'}>
+            <h1 className={'text-link-content'}>SneakersAvenue</h1>
+        </Link>
     </nav>
   );
 }
