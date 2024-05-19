@@ -6,6 +6,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import {useNavigate} from 'react-router-dom';
 import './AuthenticationScreen.css';
+import Footer from "../../components/FooterComponent";
 
 function AuthenticationContainer(): React.JSX.Element {
   const [error, setError] = useState(null as string);
@@ -86,6 +87,7 @@ function AuthenticationScreen(): React.JSX.Element {
     <div>
       <NavigationBar color={'black'}/>
       <AuthenticationContainer/>
+      <Footer/>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import ProfileComponent from '../components/ProfileComponent';
 import {deleteAccount} from '../common/profile';
 import {logout, getAuthorizedHeader} from '../common/auth';
 import './ProfileScreen.css';
+import Footer from "../components/FooterComponent";
 
 interface IProfile {
   email: string;
@@ -96,6 +97,7 @@ function ProfileScreen(): React.JSX.Element {
           <ProfileContent profile={profile}/>
         </div>
       </div>
+        <Footer/>
     </div>
   );
 }
