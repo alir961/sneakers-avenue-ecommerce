@@ -6,6 +6,7 @@ import NavigationBar, {checkIfUserIsLoggedIn} from '../components/common/Navigat
 import {getAuthorizedHeader} from "../common/auth";
 import Modal, {Styles} from 'react-modal';
 import '../index.css';
+import Footer from "../components/FooterComponent";
 
 interface IProduct {
     _id: number;
@@ -227,6 +228,7 @@ const ProductScreen: React.FC = () => {
                         fontSize: '20px'
                     }}>{error}</p>}
             </Modal>
+            <Footer/>
         </div>
 );
 };

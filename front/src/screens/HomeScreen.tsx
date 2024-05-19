@@ -2,6 +2,7 @@ import React, {CSSProperties, useEffect, useState} from 'react';
 import NavigationBar, {checkIfUserIsLoggedIn} from '../components/common/NavigationBar';
 import {useNavigate} from 'react-router-dom';
 import '../index.css';
+import Footer from "../components/FooterComponent";
 
 function HomeScreen(): React.JSX.Element {
   const isLoggedIn = checkIfUserIsLoggedIn();
@@ -93,6 +94,7 @@ function HomeScreen(): React.JSX.Element {
             </button>
           </div>
         </div>
+        <Footer/>
       </div>
   );
 }

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import NavigationBar from '../components/common/NavigationBar';
 import {getAuthorizedHeader} from "../common/auth";
 import '../index.css';
+import Footer from "../components/FooterComponent";
 
 type CartItem = {
     productId: string;
@@ -178,6 +179,7 @@ function CartScreen(): React.JSX.Element {
                 </div>
             )}
             {error && <p style={{textAlign: 'center', color: '#f33', fontWeight: 'bold', fontSize: '20px'}}>{error}</p>}
+            <Footer/>
         </div>
     );
 }
