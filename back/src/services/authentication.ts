@@ -15,7 +15,8 @@ interface AuthenticatedRequest extends Request {
 }
 
 function generateAccessToken(user: IUser): string {
-    return sign({user: user}, accessTokenSecret, {expiresIn: '3600s'});
+    // Only the id: a JWT is readable by anyone holding it, so it must not carry the password hash
+    return sign({user: {_id: String(user._id)}}, accessTokenSecret, {expiresIn: '3600s'});
 }
 
 function authenticateMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -33,7 +34,7 @@ function authenticateMiddleware(req: AuthenticatedRequest, res: Response, next: 
         if (hasError || !isUser(payload))
             return res.sendStatus(401);
         
-        const user = await User.findOne({ _id: payload.user._id }).exec();
+        const user = await User.findOne({ _id: payload.user._id }).select('-password').exec();
         if (!user) {
             return res.sendStatus(401);
         }
@@ -42,4 +43,18 @@ function authenticateMiddleware(req: AuthenticatedRequest, res: Response, next: 
     });
 }
 
-export {AuthenticatedRequest, generateAccessToken, authenticateMiddleware};
+/** Rejects requests on a `:userId` resource that belongs to someone else. */
+function ownResourceMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    const userId = req.params.userId ?? req.body?.userId;
+    if (userId && String(req.user._id) !== String(userId))
+        return res.sendStatus(403);
+    next();
+}
+
+function adminMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    if (!req.user.isAdmin)
+        return res.sendStatus(403);
+    next();
+}
+
+export {AuthenticatedRequest, generateAccessToken, authenticateMiddleware, ownResourceMiddleware, adminMiddleware};

@@ -20,6 +20,8 @@ const addToCart = async (product: IProduct, quantity = 1): Promise<void> => {
             price: product.price,
             quantity,
             image: product.image,
+        }, {
+            headers: getAuthorizedHeader(),
         });
 
         const updatedCart = response.data;

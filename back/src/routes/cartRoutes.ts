@@ -1,12 +1,12 @@
 import express from 'express';
 import {Cart} from '../schema/cart/cart.model';
-import {authenticateMiddleware} from '../services/authentication';
+import {authenticateMiddleware, ownResourceMiddleware} from '../services/authentication';
 import mongoose, {Types} from 'mongoose';
 
 const router = express.Router();
 const isValidObjectId = (id: string) => mongoose.Types.ObjectId.isValid(id);
 
-router.post('/api/cart', async (req, res) => {
+router.post('/api/cart', authenticateMiddleware, ownResourceMiddleware, async (req, res) => {
     try {
         const { userId, productId, name, price, quantity, image } = req.body;
 
@@ -38,7 +38,7 @@ router.post('/api/cart', async (req, res) => {
     }
 });
 
-router.get('/api/cart/:userId', authenticateMiddleware, async (req, res) => {
+router.get('/api/cart/:userId', authenticateMiddleware, ownResourceMiddleware, async (req, res) => {
     const { userId } = req.params;
 
     if (!userId || typeof userId !== 'string') {
@@ -61,7 +61,7 @@ router.get('/api/cart/:userId', authenticateMiddleware, async (req, res) => {
     }
 });
 
-router.put('/api/cart/:userId/increase', authenticateMiddleware, async (req, res) => {
+router.put('/api/cart/:userId/increase', authenticateMiddleware, ownResourceMiddleware, async (req, res) => {
     try {
         const { userId } = req.params;
         const { productId } = req.body;
@@ -93,7 +93,7 @@ router.put('/api/cart/:userId/increase', authenticateMiddleware, async (req, res
     }
 });
 
-router.put('/api/cart/:userId/decrease', authenticateMiddleware, async (req, res) => {
+router.put('/api/cart/:userId/decrease', authenticateMiddleware, ownResourceMiddleware, async (req, res) => {
     try {
         const { userId } = req.params;
         const { productId } = req.body;
@@ -126,7 +126,7 @@ router.put('/api/cart/:userId/decrease', authenticateMiddleware, async (req, res
     }
 });
 
-router.delete('/api/cart/:userId/:productId', authenticateMiddleware, async (req, res) => {
+router.delete('/api/cart/:userId/:productId', authenticateMiddleware, ownResourceMiddleware, async (req, res) => {
     try {
         const { userId, productId } = req.params;
 

@@ -1,5 +1,6 @@
 import express from 'express';
 import { Product } from '../schema/products/products.model';
+import {adminMiddleware, authenticateMiddleware} from '../services/authentication';
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get('/api/products', async (req, res) => {
     }
 });
 
-router.post('/api/products', async (req, res) => {
+router.post('/api/products', authenticateMiddleware, adminMiddleware, async (req, res) => {
     try {
         const { name, description, price, image } = req.body;
 

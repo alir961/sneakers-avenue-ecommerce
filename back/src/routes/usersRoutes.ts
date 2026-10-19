@@ -15,7 +15,7 @@ router.post('/api/auth/register', [], async (req: Request, res: Response) => {
             const user = await register({email, password});
 
             res.status(201)
-                .json(user);
+                .json({_id: user._id, email: user.email});
         } catch (e) {
             res.status(403)
                 .json({message: `Email is already used or Invalid credentials: ${process.env.PASSWORD_CONDITIONS}`});

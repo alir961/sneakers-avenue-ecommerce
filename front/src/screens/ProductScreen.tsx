@@ -76,7 +76,8 @@ const ProductScreen: React.FC = () => {
         try {
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/api/products`,
-                newProduct
+                newProduct,
+                { headers: getAuthorizedHeader() }
             );
             setProducts((prev) => [...prev, response.data]);
             setIsModalOpen(false);
