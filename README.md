@@ -22,28 +22,49 @@ back/   Express + TypeScript REST API
 
 ## Run locally
 
-Requirements: Node.js 18+, MongoDB.
+Requirements: Node.js 20+, and MongoDB (or Docker to run it).
 
 ```bash
-# API
+# Database (skip if MongoDB already runs on localhost:27017)
+docker run -d --name sneakers-mongo -p 27017:27017 mongo:7
+
+# API on http://localhost:8080
 cd back
-cp .env.example .env    # then fill in the values
+cp .env.example .env    # set ACCESS_TOKEN_SECRET to a long random string
 npm install
 npm start
 
-# Front end
-cd ../front
+# Front end on http://localhost:3000 (in a second terminal)
+cd front
+cp .env.example .env    # REACT_APP_API_URL=http://localhost:8080
 npm install
 npm start
 ```
 
-`back/.env` needs:
+`back/.env` holds:
 
 ```
 MONGODB_URI=mongodb://localhost:27017/sneakers-avenue
 ACCESS_TOKEN_SECRET=change-me
 PASSWORD_CONDITIONS="At least 8 characters"
 PORT=8080
+```
+
+### Add products
+
+The catalogue starts empty and only admins can add products. Register an account in the app, make it an admin, then log in again and add products from the product page:
+
+```bash
+docker exec sneakers-mongo mongosh sneakers-avenue --eval \
+  'db.users.updateOne({ email: "you@example.com" }, { $set: { isAdmin: true } })'
+```
+
+Or through the API, with the admin's token from `POST /api/auth/login`:
+
+```bash
+curl -X POST http://localhost:8080/api/products \
+  -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
+  -d '{"name": "Air Max 90", "description": "Classic runner", "price": 129.9, "image": "https://..."}'
 ```
 
 ## Security & tests
