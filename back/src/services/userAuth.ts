@@ -1,5 +1,5 @@
 import {IUser, User} from '../schema/users/users.model.js';
-import {compare, genSalt, hash} from 'bcrypt';
+import {compare, genSalt, hash} from 'bcryptjs';
 import {generateAccessToken} from './authentication';
 
 const EMAIL_REGEX: RegExp = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
