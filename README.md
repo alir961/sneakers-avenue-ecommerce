@@ -20,39 +20,57 @@ back/   Express + TypeScript REST API
         schema/    Mongoose models (User, Product, Cart)
 ```
 
-## Run locally
+## Supported platforms
 
-Requirements: Node.js 20+, and MongoDB (or Docker to run it).
+Linux, macOS and Windows: everything runs on Node.js, and MongoDB runs in Docker (or as a native install). The API tests run in CI on Ubuntu with Node.js 20. On Windows use PowerShell (`copy` instead of `cp`) or Git Bash.
+
+## Requirements
+
+- **Node.js 20 or later** with npm (tested with 20 and 26)
+- **MongoDB 6+** on `localhost:27017`, or **Docker** to run it
+- Free ports **8080** (API), **3000** (front end) and **27017** (MongoDB)
+- `mongosh` to make an account admin; it is included in the `mongo:7` Docker image
+
+## Install and run
 
 ```bash
+git clone https://github.com/alir961/sneakers-avenue-ecommerce.git
+cd sneakers-avenue-ecommerce
+
 # Database (skip if MongoDB already runs on localhost:27017)
 docker run -d --name sneakers-mongo -p 27017:27017 mongo:7
 
 # API on http://localhost:8080
 cd back
-cp .env.example .env    # set ACCESS_TOKEN_SECRET to a long random string
+cp .env.example .env    # set ACCESS_TOKEN_SECRET to a long random string, e.g. openssl rand -base64 48
 npm install
-npm start
+npm start               # compiles the TypeScript to dist/ and starts the server
 
-# Front end on http://localhost:3000 (in a second terminal)
+# Front end on http://localhost:3000 (in a second terminal, from the repository root)
 cd front
 cp .env.example .env    # REACT_APP_API_URL=http://localhost:8080
 npm install
-npm start
+npm start               # opens the browser on http://localhost:3000
 ```
+
+`GET http://localhost:8080/api` answers `{"message":"Welcome to Express API"}` once the API is up. The API exits at startup if `MONGODB_URI` is not set or MongoDB is unreachable. Next time, `docker start sneakers-mongo` restarts the database with its data.
 
 `back/.env` holds:
 
 ```
 MONGODB_URI=mongodb://localhost:27017/sneakers-avenue
 ACCESS_TOKEN_SECRET=change-me
-PASSWORD_CONDITIONS="At least 8 characters"
+PASSWORD_CONDITIONS="At least 8 characters, including one special character"
 PORT=8080
 ```
 
+`PASSWORD_CONDITIONS` is only the hint shown when a registration is refused. Passwords must have **at least 8 characters including a special character** (`@ ? ! . , ; : - _ ~ & = + / * % ^ $ ( ) [ ] { } < > " '`), e.g. `password123!`.
+
+`front/.env` holds `REACT_APP_API_URL`, the API base URL. React reads it at startup, so restart `npm start` after changing it.
+
 ### Add products
 
-The catalogue starts empty and only admins can add products. Register an account in the app, make it an admin, then log in again and add products from the product page:
+The catalogue starts empty and only admins can add products. Register an account in the app, make it an admin, then log in again and add products from the product page (the add button only shows for admins):
 
 ```bash
 docker exec sneakers-mongo mongosh sneakers-avenue --eval \
@@ -80,7 +98,9 @@ An API test suite (Jest, Supertest, in-memory MongoDB) runs in CI on every push.
 | Product creation was hidden in the UI for non-admins but open on the API | Server-side admin check |
 
 ```bash
-cd back && npm test
+cd back && npm test     # 10 tests; downloads a MongoDB binary on the first run, no database needed
+npx tsc --noEmit        # type check, as in CI
+npm run lint            # ESLint (front end: cd front && npm run lint)
 ```
 
 ## Tech stack
