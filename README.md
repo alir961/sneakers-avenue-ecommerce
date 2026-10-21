@@ -111,7 +111,3 @@ npm run lint            # ESLint (front end: cd front && npm run lint)
 ## Tech stack
 
 TypeScript · React · Express · MongoDB / Mongoose · JWT · bcrypt · Jest · Supertest · GitHub Actions · ESLint (Airbnb) · Prettier
-
-## License
-
-[MIT](LICENSE)
