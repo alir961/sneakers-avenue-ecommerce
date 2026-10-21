@@ -96,6 +96,11 @@ An API test suite (Jest, Supertest, in-memory MongoDB) runs in CI on every push.
 | The JWT embedded the whole user document, **including the bcrypt hash** (JWTs are only base64-encoded) | Token now carries only the user id |
 | Register and `/api/me` returned the password hash | Hash excluded from all responses |
 | Product creation was hidden in the UI for non-admins but open on the API | Server-side admin check |
+| The cart stored the **price**, name and image sent by the client | Taken from the product catalog |
+| Login accepted MongoDB operators such as `{"$ne": null}` as the email | Email and password must be strings |
+| A profile could switch to an email already used by another account | Refused with 409, and the email is a unique index |
+| Profile updates answered 200 even when saving failed | Errors now return 500 |
+| Deleting an account left its cart behind | The cart is deleted with the account |
 
 ```bash
 cd back && npm test     # 10 tests; downloads a MongoDB binary on the first run, no database needed

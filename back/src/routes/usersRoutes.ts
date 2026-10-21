@@ -7,8 +7,13 @@ dotenv.config();
 
 const router = Router();
 
+// Objects such as {"$ne": null} would reach MongoDB as query operators.
+const hasStringCredentials = (body: Request['body']): boolean =>
+    typeof body?.email === 'string' && body.email !== ''
+    && typeof body?.password === 'string' && body.password !== '';
+
 router.post('/api/auth/register', [], async (req: Request, res: Response) => {
-    if (req.body?.email && req.body?.password) {
+    if (hasStringCredentials(req.body)) {
         const {email, password} = req.body;
 
         try {
@@ -27,7 +32,7 @@ router.post('/api/auth/register', [], async (req: Request, res: Response) => {
 });
 
 router.post('/api/auth/login', [], async (req: Request, res: Response) => {
-    if (req.body?.email && req.body?.password) {
+    if (hasStringCredentials(req.body)) {
         const {email, password} = req.body;
 
         try {

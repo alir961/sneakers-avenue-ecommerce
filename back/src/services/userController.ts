@@ -1,27 +1,16 @@
 import { Request, Response } from 'express';
 import {IUser, User} from '../schema/users/users.model';
 
-const getUsers = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const users = await User.find();
-        res.status(200).send(users);
-    } catch (error) {
-        console.error('Error getting users:', error);
-        res.status(500).send({ error: 'Error getting users' });
-    }
-};
-
+// Errors propagate so the route can answer 500 instead of a false 200.
 const updateUser = async (userId: string, profile: IUser) => {
-    try {
-        const user = await User.findById(userId).exec();
+    const user = await User.findById(userId).exec();
 
-        user.email = profile.email;
-        user.firstName = profile.firstName;
-        user.lastName = profile.lastName;
-        await user.save();
-    } catch (error) {
-        console.error('Unable to update user', error);
-    }
+    if (!user)
+        throw new Error('User not found');
+    user.email = profile.email;
+    user.firstName = typeof profile.firstName === 'string' ? profile.firstName : '';
+    user.lastName = typeof profile.lastName === 'string' ? profile.lastName : '';
+    await user.save();
 };
 
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
@@ -40,4 +29,4 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-export { getUsers, updateUser, deleteUser };
+export { updateUser, deleteUser };

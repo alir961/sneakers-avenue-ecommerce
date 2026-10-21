@@ -1,6 +1,7 @@
 import {AuthenticatedRequest, authenticateMiddleware} from '../services/authentication';
 import {Response, Router} from 'express';
 import {User} from '../schema/users/users.model';
+import {Cart} from '../schema/cart/cart.model';
 import {updateUser} from '../services/userController';
 
 const router = Router();
@@ -18,8 +19,10 @@ router.delete('/api/me', authenticateMiddleware, async (req: AuthenticatedReques
     try {
         const user = await User.findById(req.user._id).exec();
 
-        if (user)
+        if (user) {
+            await Cart.deleteMany({userId: user._id}).exec();
             await user.deleteOne();
+        }
         res.sendStatus(200);
     } catch (e) {
         console.warn('Error while deleting account', e);
@@ -34,7 +37,10 @@ router.put('/api/profile', authenticateMiddleware, async (req: AuthenticatedRequ
 
         if (!data.email) { return res.status(400).json({ message: 'Missing email in request body' }); }
 
-        if (!EMAIL_REGEX.test(data.email)) { return res.status(400).json({ message: 'Invalid email format' }); }
+        if (typeof data.email !== 'string' || !EMAIL_REGEX.test(data.email)) { return res.status(400).json({ message: 'Invalid email format' }); }
+
+        const owner = await User.findOne({email: data.email, _id: {$ne: userId}}).exec();
+        if (owner) { return res.status(409).json({ message: 'Email is already used' }); }
 
         await updateUser(userId, data);
         return res.sendStatus(200);

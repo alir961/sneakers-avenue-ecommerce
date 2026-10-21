@@ -2,6 +2,7 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 import app from '../src/app';
 import {User} from '../src/schema/users/users.model';
+import {Product} from '../src/schema/products/products.model';
 
 const PASSWORD = 'Sneak3rs!pass';
 
@@ -41,6 +42,14 @@ describe('Authentication', () => {
         await signUp('wrong@test.com');
         const res = await request(app).post('/api/auth/login').send({email: 'wrong@test.com', password: 'Nope!nope1'});
         expect(res.status).toBe(403);
+    });
+
+    test('login and register reject query operators instead of strings', async () => {
+        await signUp('operator@test.com');
+        const login = await request(app).post('/api/auth/login').send({email: {$ne: null}, password: PASSWORD});
+        expect(login.status).toBe(400);
+        const register = await request(app).post('/api/auth/register').send({email: {$gt: ''}, password: PASSWORD});
+        expect(register.status).toBe(400);
     });
 
     test('protected routes need a valid token', async () => {
@@ -86,9 +95,50 @@ describe('Products', () => {
     });
 });
 
+describe('Profile', () => {
+    test('an email already used by another account is refused', async () => {
+        await signUp('taken@test.com');
+        const {token} = await signUp('mover@test.com');
+        const res = await request(app).put('/api/profile').set(auth(token))
+            .send({email: 'taken@test.com', firstName: 'A', lastName: 'B'});
+        expect(res.status).toBe(409);
+        const same = await request(app).put('/api/profile').set(auth(token))
+            .send({email: 'mover@test.com', firstName: 'A', lastName: 'B'});
+        expect(same.status).toBe(200);
+    });
+
+    test('deleting the account also deletes its cart', async () => {
+        const {token, id} = await signUp('leaving@test.com');
+        const product = await Product.create(sneaker);
+        await request(app).post('/api/cart').set(auth(token)).send({userId: id, productId: product._id, quantity: 1});
+        expect((await request(app).delete('/api/me').set(auth(token))).status).toBe(200);
+        const {Cart} = await import('../src/schema/cart/cart.model');
+        expect(await Cart.countDocuments({userId: id})).toBe(0);
+    });
+});
+
 describe('Cart', () => {
-    const productId = new mongoose.Types.ObjectId().toString();
-    const item = (userId: string) => ({userId, productId, name: 'Air Max 90', price: 140, quantity: 1, image: 'a.png'});
+    let productId: string;
+    const item = (userId: string) => ({userId, productId, quantity: 1});
+
+    beforeAll(async () => {
+        productId = (await Product.create(sneaker))._id.toString();
+    });
+
+    test('name, price and image come from the catalog, not the client', async () => {
+        const {token, id} = await signUp('cheap@test.com');
+        const res = await request(app).post('/api/cart').set(auth(token))
+            .send({...item(id), name: 'Free shoes', price: 0.01, image: 'evil.png'});
+        expect(res.status).toBe(200);
+        expect(res.body.items[0]).toMatchObject({name: sneaker.name, price: sneaker.price, image: sneaker.image});
+    });
+
+    test('adding an unknown product is refused', async () => {
+        const {token, id} = await signUp('ghost@test.com');
+        const unknown = new mongoose.Types.ObjectId().toString();
+        const res = await request(app).post('/api/cart').set(auth(token)).send({userId: id, productId: unknown, quantity: 1});
+        expect(res.status).toBe(404);
+    });
 
     test('full cart flow for its owner', async () => {
         const {token, id} = await signUp('owner@test.com');

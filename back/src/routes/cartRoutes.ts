@@ -1,5 +1,6 @@
 import express from 'express';
 import {Cart} from '../schema/cart/cart.model';
+import {Product} from '../schema/products/products.model';
 import {authenticateMiddleware, ownResourceMiddleware} from '../services/authentication';
 import mongoose, {Types} from 'mongoose';
 
@@ -8,11 +9,18 @@ const isValidObjectId = (id: string) => mongoose.Types.ObjectId.isValid(id);
 
 router.post('/api/cart', authenticateMiddleware, ownResourceMiddleware, async (req, res) => {
     try {
-        const { userId, productId, name, price, quantity, image } = req.body;
+        const { userId, productId, quantity } = req.body;
 
-        if (!userId || !productId || !name || !image || typeof price !== 'number' || typeof quantity !== 'number' || quantity < 1) {
+        if (!userId || !isValidObjectId(productId) || !Number.isInteger(quantity) || quantity < 1) {
             return res.status(400).json({ message: 'Invalid data' });
         }
+
+        // Name, price and image come from the catalog, never from the client.
+        const product = await Product.findById(productId).exec();
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        const { name, price, image } = product;
 
         let cart = await Cart.findOne({ userId });
 
